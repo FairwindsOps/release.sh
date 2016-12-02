@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $TRACE ]] && set -x
+
+log-fail() {
+  declare desc="log fail formatter"
+  echo "$@" 1>&2
+  exit 1
+}
+
+main() {
+  declare desc="Creates a release for the last created tag on github"
+  local DESCRIPTION REQUEST_BODY SUBJECT TAG_NAME
+ 
+  [[ -z "$GITHUB_ACCESS_TOKEN" ]] && log-fail "You must specify a GITHUB_ACCESS_TOKEN environment variable"
+  [[ -z "$GITHUB_ORGANIZATION" ]] && log-fail "You must specify a GITHUB_ORGANIZATION environment variable"
+  [[ -z "$GITHUB_REPOSITORY" ]] && log-fail "You must specify a GITHUB_REPOSITORY environment variable"
+
+  TAG_NAME="$(git describe --exact-match --candidates=0)"
+
+  if [[ $? -ne 0 ]]; then
+    echo "You must create an annotated tag for this commit with 'git tag -a <tagname>'"
+    exit 1
+  fi
+
+  echo "Found tag: ${TAG_NAME}"
+
+  SUBJECT="$(git show -s --format=%s)"
+  DESCRIPTION="$(git show -s --format=%B | tail -n +2 )"
+
+  echo "Release name: ${SUBJECT}"
+  echo "Release description: ${DESCRIPTION}"
+
+  REQUEST_BODY="$(printf '{"tag_name": "%s", "name": "%s", "body": "%s", "draft": false, "prerelease": false}' "$TAG_NAME" "$SUBJECT" "$DESCRIPTION")"
+
+  echo "$REQUEST_BODY"
+
+  curl --data "${REQUEST_BODY}" "https://api.github.com/repos/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}/releases?access_token=${GITHUB_ACCESS_TOKEN}"
+}
+
+main "$@"
