@@ -2,7 +2,7 @@
 
 main() {
   declare desc="Creates a release for the last created tag on github"
-  TAG_NAME=$(git describe --exact-match --candidates=0)
+  TAG_NAME="$(git describe --exact-match --candidates=0)"
 
   if [[ $? -ne 0 ]]; then
     echo "You must create an annotated tag for this commit with 'git tag -a <tagname>'"
