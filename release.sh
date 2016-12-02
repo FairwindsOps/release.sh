@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eo pipefail; [[ $TRACE ]] && set -x
 
 log-fail() {
   declare desc="log fail formatter"
