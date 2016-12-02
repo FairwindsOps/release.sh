@@ -22,9 +22,7 @@ main() {
   echo "Found tag: ${TAG_NAME}"
 
   SUBJECT="$(git show -s --format=%s)"
-  MESSAGE="$(git show -s --format=%B | tail -n +2 )"
-
-  DESCRIPTION="$MESSAGE"
+  DESCRIPTION="$(git show -s --format=%B | tail -n +2 )"
 
   echo "Release name: ${SUBJECT}"
   echo "Release description: ${DESCRIPTION}"
