@@ -8,6 +8,8 @@ log-fail() {
 
 main() {
   declare desc="Creates a release for the last created tag on github"
+  local DESCRIPTION REQUEST_BODY SUBJECT TAG_NAME
+ 
   [[ -z "$GITHUB_ORGANIZATION" ]] && log-fail "You must specify a GITHUB_ORGANIZATION environment variable"
   [[ -z "$GITHUB_REPOSITORY" ]] && log-fail "You must specify a GITHUB_REPOSITORY environment variable"
   [[ -z "$GITHUB_ACCESS_TOKEN" ]] && log-fail "You must specify a GITHUB_ACCESS_TOKEN environment variable"
