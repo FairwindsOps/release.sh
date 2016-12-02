@@ -21,7 +21,7 @@ main() {
 
   REQUEST_BODY="$(printf '{"tag_name": "%s", "name": "%s", "body": "%s", "draft": false, "prerelease": false}' "$TAG_NAME" "$SUBJECT" "$DESCRIPTION")"
 
-  echo "$API_JSON"
+  echo "$REQUEST_BODY"
 
   curl --data "${REQUEST_BODY}" "https://api.github.com/repos/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}/releases?access_token=${GITHUB_ACCESS_TOKEN}"
 }
