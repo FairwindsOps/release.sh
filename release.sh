@@ -1,7 +1,17 @@
 #!/bin/bash
 
+log-fail() {
+  declare desc="log fail formatter"
+  echo "$@" 1>&2
+  exit 1
+}
+
 main() {
   declare desc="Creates a release for the last created tag on github"
+  [[ -z "$GITHUB_ORGANIZATION" ]] && log-fail "You must specify a GITHUB_ORGANIZATION environment variable"
+  [[ -z "$GITHUB_REPOSITORY" ]] && log-fail "You must specify a GITHUB_REPOSITORY environment variable"
+  [[ -z "$GITHUB_ACCESS_TOKEN" ]] && log-fail "You must specify a GITHUB_ACCESS_TOKEN environment variable"
+
   TAG_NAME="$(git describe --exact-match --candidates=0)"
 
   if [[ $? -ne 0 ]]; then
