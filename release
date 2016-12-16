@@ -10,7 +10,7 @@ log-fail() {
 main() {
   declare desc="Creates a release for the last created tag on github"
   local DESCRIPTION REQUEST_BODY SUBJECT TAG_NAME
- 
+
   [[ -z "$GITHUB_ACCESS_TOKEN" ]] && log-fail "You must specify a GITHUB_ACCESS_TOKEN environment variable"
   [[ -z "$GITHUB_ORGANIZATION" ]] && log-fail "You must specify a GITHUB_ORGANIZATION environment variable"
   [[ -z "$GITHUB_REPOSITORY" ]] && log-fail "You must specify a GITHUB_REPOSITORY environment variable"
@@ -24,13 +24,15 @@ main() {
 
   echo "Found tag: ${TAG_NAME}"
 
-  SUBJECT="$(git show -s --format=%s)"
-  DESCRIPTION="$(git show -s --format=%B | tail -n +2 )"
+  SUBJECT="$(git tag -l -n1 --format="%(contents:subject)" ${TAG_NAME})"
+  DESCRIPTION="$(git tag -l -n1 --format="%(contents:body)" ${TAG_NAME} )"
 
   echo "Release name: ${SUBJECT}"
   echo "Release description: ${DESCRIPTION}"
 
-  REQUEST_BODY="$(printf '{"tag_name": "%s", "name": "%s", "body": "%s", "draft": false, "prerelease": false}' "$TAG_NAME" "$SUBJECT" "$DESCRIPTION")"
+
+  REQUEST_BODY="$(jq -n --arg tag_name "$TAG_NAME" --arg subject "${SUBJECT}" --arg description "${DESCRIPTION}" \
+   '{"tag_name": $tag_name, "target_commitish": "master", "name": $subject, "body": $description, "draft": false, "prerelease": false} ')"
 
   echo "$REQUEST_BODY"
 
