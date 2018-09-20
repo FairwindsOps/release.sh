@@ -12,34 +12,34 @@ GITHUB_ORGANIZATION: $CIRCLE_PROJECT_USERNAME
 GITHUB_REPOSITORY: $CIRCLE_PROJECT_REPONAME
 ```
 
-* Add a deployment block to create the release
+* Add a this task to your Circle2.0 job block to create the release
 
 ```
 release:
-  tag: /v.*/
-  owner: reactiveops
-  commands:
-    - git fetch --tags
-    - curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.1/release.sh
-    - /bin/bash release.sh
+  - run:
+      name: create release
+      command: |
+        git fetch --tags
+        curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.2/release
+        /bin/bash release
 
 ```
 
-A full example would look like
+An complete job would look like. This could be added to the `jobs:` section of your `.circleci/config.yml`
 
 ```
-machine:
+release:
+  docker:
+    - image: circleci/python:2
   environment:
     GITHUB_ORGANIZATION: $CIRCLE_PROJECT_USERNAME
     GITHUB_REPOSITORY: $CIRCLE_PROJECT_REPONAME
-
-deployment:
-  release:
-    tag: /v.*/
-    owner: YOU!
-    commands:
-      - git fetch --tags
-      - curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.2/release
-      - /bin/bash release
+  steps:
+    - checkout
+    - run:
+        name: create release
+        command: |
+          git fetch --tags
+          curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.2/release
+          /bin/bash release
 ```
-
