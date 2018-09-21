@@ -28,18 +28,30 @@ release:
 An complete job would look like. This could be added to the `jobs:` section of your `.circleci/config.yml`
 
 ```
-release:
-  docker:
-    - image: circleci/python:2
-  environment:
-    GITHUB_ORGANIZATION: $CIRCLE_PROJECT_USERNAME
-    GITHUB_REPOSITORY: $CIRCLE_PROJECT_REPONAME
-  steps:
-    - checkout
-    - run:
-        name: create release
-        command: |
-          git fetch --tags
-          curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.2/release
-          /bin/bash release
+jobs:
+  release:
+    docker:
+      - image: circleci/python:2
+    environment:
+      GITHUB_ORGANIZATION: $CIRCLE_PROJECT_USERNAME
+      GITHUB_REPOSITORY: $CIRCLE_PROJECT_REPONAME
+    steps:
+      - checkout
+      - run:
+          name: create release
+          command: |
+            git fetch --tags
+            curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.2/release
+            /bin/bash release
+workflows:
+  version: 2
+  release:
+    jobs:
+      - release:
+          filters:
+            tags:
+              only: /.*/ #Run release step for any branch (or update pattern to match the tag)
+            branches:
+              ignore: /.*/ #Ignore all branches, never create release for a branch
+
 ```
