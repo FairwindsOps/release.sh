@@ -59,5 +59,5 @@ workflows:
 
 ## Kick off a release
 * `git tag -a <tag>`
-* Write annotation in editor
+* Write annotation in editor and make sure the first line of the note is the version of the release.
 * `git push origin <tag>`
