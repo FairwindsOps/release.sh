@@ -1,7 +1,7 @@
 # release.sh
-Release scripts for our repositories
+Script to automatically create a `release` in your github repo from an annotated tag.
 
-### Adding Release.sh Support to Your Repository
+## Add Release.sh Support to Your Repository
 
 * Add a [`GITHUB_ACCESS_TOKEN`](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) environment variable to the CircleCI build.
 
@@ -25,7 +25,7 @@ release:
 
 ```
 
-An complete job would look like. This could be added to the `jobs:` section of your `.circleci/config.yml`
+A complete job would look like. This could be added to the `jobs:` section of your `.circleci/config.yml`
 
 ```
 jobs:
@@ -55,3 +55,9 @@ workflows:
               ignore: /.*/ #Ignore all branches, never create release for a branch
 
 ```
+
+
+## Kick off a release
+* `git tag -a <tag>`
+* Write annotation in editor
+* `git push origin <tag>`
