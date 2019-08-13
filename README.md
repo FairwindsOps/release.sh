@@ -20,7 +20,7 @@ release:
       name: create release
       command: |
         git fetch --tags
-        curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.2/release
+        curl -O https://raw.githubusercontent.com/FairwindsOps/release.sh/v0.0.2/release
         /bin/bash release
 
 ```
@@ -41,7 +41,7 @@ jobs:
           name: create release
           command: |
             git fetch --tags
-            curl -O https://raw.githubusercontent.com/reactiveops/release.sh/v0.0.2/release
+            curl -O https://raw.githubusercontent.com/FairwindsOps/release.sh/v0.0.2/release
             /bin/bash release
 workflows:
   version: 2
